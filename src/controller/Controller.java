@@ -6,8 +6,8 @@ import model.RBTree;
 import model.Item;
 
 public class Controller {  // Контроллер
-    private View view;  // Вьювер
-    private RBTree rbt;
+    private final View view;  // Вьювер
+    private final RBTree rbt;
 
     public Controller() {
         this.view = new View();

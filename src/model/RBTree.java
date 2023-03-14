@@ -7,16 +7,6 @@ public class RBTree {
         root = null;
     }
 
-//    public void add(Item item) {
-//        if (root == null) {
-//            root = item;
-//        }
-//    }
-//
-//    public void add(int number) {
-//        Item item = new Item(number);
-//    }
-
     public Item getRoot() {
         return this.root;
     }
@@ -61,6 +51,7 @@ public class RBTree {
         }
     }
 
+    @SuppressWarnings("unused")
     public Item searchItem(int key) {
         Item item = this.root;
         while (item != null) {
@@ -137,7 +128,7 @@ public class RBTree {
             return;
         }
 
-        // Get the uncle (may be null/nil, in which case its color is BLACK)
+        // Get the uncle (maybe null/nil, in which case its color is BLACK)
         Item uncle = this.getUncle(parent);
 
         // Case 3: Uncle is red -> recolor parent, grandparent and uncle
@@ -157,7 +148,7 @@ public class RBTree {
             if (item == parent.getRight()) {
                 this.rotateLeft(parent);
 
-                // Let "parent" point to the new root node of the rotated sub-tree.
+                // Let "parent" point to the new root node of the rotated subtree.
                 // It will be recolored in the next step, which we're going to fall-through to.
                 parent = item;
             }
@@ -176,7 +167,7 @@ public class RBTree {
             if (item == parent.getLeft()) {
                 this.rotateRight(parent);
 
-                // Let "parent" point to the new root node of the rotated sub-tree.
+                // Let "parent" point to the new root node of the rotated subtree.
                 // It will be recolored in the next step, which we're going to fall-through to.
                 parent = item;
             }

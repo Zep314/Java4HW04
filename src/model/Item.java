@@ -1,7 +1,5 @@
 package model;
 
-import java.awt.*;
-
 public class Item {
     private int data;
     private boolean is_black;
@@ -9,6 +7,7 @@ public class Item {
     private Item right;
     private Item parent;
 
+    @SuppressWarnings("unused")
     public Item() {
         this.data = 0;
         this.is_black = true;
