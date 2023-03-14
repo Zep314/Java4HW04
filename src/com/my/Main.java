@@ -25,3 +25,5 @@ public class Main {  // Точка входа в программу
         controller.run();
     }
 }
+
+// https://www.happycoders.eu/algorithms/red-black-tree-java/
