@@ -5,14 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fd880fa-1e95-425b-94c0-3704ed96ce4b" name="Changes" comment="initial commit">
-      <change afterPath="$PROJECT_DIR$/src/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/model/Item.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/model/NilItem.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/model/RBTree.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/view/View.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/my/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/my/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/controller/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/controller/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/Item.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/Item.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/NilItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/NilItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/model/RBTree.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/model/RBTree.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/view/View.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/view/View.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -38,12 +37,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "/home/dima/Work/Java/dz4/Java4HW04"
   }
-}</component>
+}]]></component>
   <component name="RunManager">
     <configuration name="Java4HW04" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.my.Main" />

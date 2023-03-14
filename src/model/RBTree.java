@@ -1,7 +1,8 @@
 package model;
 
+// Класс левостороннего красно-черного дерева элементов
 public class RBTree {
-    private Item root;
+    private Item root;  // Корень дерева
 
     public RBTree() {
         root = null;
@@ -10,7 +11,7 @@ public class RBTree {
     public Item getRoot() {
         return this.root;
     }
-    private void rotateRight(Item item) {
+    private void rotateRight(Item item) {  // Правый поворот
         Item parent = item.getParent();
         Item leftChild = item.getLeft();
 
@@ -20,10 +21,10 @@ public class RBTree {
         }
         leftChild.setRight(item);
         item.setParent(leftChild);
-        this.replaceParentsChild(parent, item, leftChild);
+        this.replaceParentsChild(parent, item, leftChild);  // исправляем связи между повернутыми узлами
     }
 
-    private void rotateLeft(Item item) {
+    private void rotateLeft(Item item) {  // Левый поворот
         Item parent = item.getParent();
         Item rightChild = item.getRight();
 
@@ -33,9 +34,10 @@ public class RBTree {
         }
         rightChild.setLeft(item);
         item.setParent(rightChild);
-        this.replaceParentsChild(parent, item, rightChild);
+        this.replaceParentsChild(parent, item, rightChild);  // исправляем связи между повернутыми узлами
     }
 
+    // исправляем связи между повернутыми узлами
     private void replaceParentsChild(Item parent, Item oldChild, Item newChild) {
         if (parent == null) {
             this.root = newChild;
@@ -44,7 +46,8 @@ public class RBTree {
         } else if (parent.getRight() == oldChild) {
             parent.setRight(newChild);
         } else {
-            throw new IllegalStateException("Node is not a child of its parent");
+            // Узел не наследник своего родителя
+            throw new IllegalStateException("Item is not a child of its parent");
         }
         if (newChild != null) {
             newChild.setParent(parent);
@@ -52,7 +55,7 @@ public class RBTree {
     }
 
     @SuppressWarnings("unused")
-    public Item searchItem(int key) {
+    public Item searchItem(int key) {  // Поиск элемента
         Item item = this.root;
         while (item != null) {
             if (key == item.getData()) {
@@ -66,11 +69,11 @@ public class RBTree {
         return null;
     }
 
-    public void insertItem(int key) {
+    public void insertItem(int key) {  // Вставка нового элемента
         Item item = this.root;
         Item parent = null;
 
-        // Traverse the tree to the left or right depending on the key
+        // Перемещаемся по дереву, ищем подходящий элемент
         while (item != null) {
             parent = item;
             if (key < item.getData()) {
@@ -78,127 +81,108 @@ public class RBTree {
             } else if (key > item.getData()) {
                 item = item.getRight();
             } else {
-                throw new IllegalArgumentException("BST already contains a node with key " + key);
+                // Ошибка! Элемент с таким ключом уже есть в дереве
+                throw new IllegalArgumentException("Tree already contains item with key " + key);
             }
         }
 
-        // Insert new node
+        // Вставка нового элемента
         Item newItem = new Item(key);
-        newItem.setBlack(false);  // RED!
+        newItem.setBlack(false);  // Новый элемент - всегда красный (кроме самого первого)
         if (parent == null) {
-            this.root = newItem;
-        } else if (key < parent.getData()) {
+            this.root = newItem;  // Первый элемент
+        } else if (key < parent.getData()) {  // Настройка элемента - родителя
             parent.setLeft(newItem);
         } else {
             parent.setRight(newItem);
         }
         newItem.setParent(parent);
 
-        this.fixRedBlackPropertiesAfterInsert(newItem);
+        this.rbTreeBalancing(newItem); // Восстанавливаем правила (балансировка) красно-черного дерева,
+                                       // которые могли нарушиться после вставки нового элемента
     }
 
-
-
-    private void fixRedBlackPropertiesAfterInsert(Item item) {
+    private void rbTreeBalancing(Item item) {  // Балансировка дерева
         Item parent = item.getParent();
 
-        // Case 1: Parent is null, we've reached the root, the end of the recursion
-        if (parent == null) {
-            // Uncomment the following line if you want to enforce black roots (rule 2):
-            // node.color = BLACK;
-            return;
-        }
+        // Родитель - пуст, это корень дерева - балансировать нечего
+        if (parent == null) return;
 
-        // Parent is black --> nothing to do
-        if (parent.is_black()) {
-            return;
-        }
+        // Родитель - черный - балансировать нечего
+        if (parent.is_black()) return;
 
-        // From here on, parent is red
-        Item grandparent = parent.getParent();
+        // Тут родитель всегда красный
+        Item grandparent = parent.getParent(); // поднимаемся на 2 уровня выше
 
-        // Case 2:
-        // Not having a grandparent means that parent is the root. If we enforce black roots
-        // (rule 2), grandparent will never be null, and the following if-then block can be
-        // removed.
+        // Отсутствие элемента grandparent - означает, что parent - это корень дерева
         if (grandparent == null) {
-            // As this method is only called on red nodes (either on newly inserted ones - or -
-            // recursively on red grandparents), all we have to do is to recolor the root black.
+            // Корень - всегда черный
             parent.setBlack(true);
             return;
         }
 
-        // Get the uncle (maybe null/nil, in which case its color is BLACK)
+        // Соседний узел, рядом с родительским
         Item uncle = this.getUncle(parent);
 
-        // Case 3: Uncle is red -> recolor parent, grandparent and uncle
+        // Uncle существует - и он - красный -> перекрашиваем родителя, grandparent и uncle
         if (uncle != null && !uncle.is_black()) {
             parent.setBlack(true);
             grandparent.setBlack(false);
             uncle.setBlack(true);
 
-            // Call recursively for grandparent, which is now red.
-            // It might be root or have a red parent, in which case we need to fix more...
-            fixRedBlackPropertiesAfterInsert(grandparent);
+            // Вызываем рекурсивно для grandparent, который сейчас красный.
+            rbTreeBalancing(grandparent);
         }
 
-        // Parent is left child of grandparent
-        else if (parent == grandparent.getLeft()) {
-            // Case 4a: Uncle is black and node is left->right "inner child" of its grandparent
-            if (item == parent.getRight()) {
-                this.rotateLeft(parent);
-
-                // Let "parent" point to the new root node of the rotated subtree.
-                // It will be recolored in the next step, which we're going to fall-through to.
-                parent = item;
-            }
-
-            // Case 5a: Uncle is black and node is left->left "outer child" of its grandparent
-            this.rotateRight(grandparent);
-
-            // Recolor original parent and grandparent
-            parent.setBlack(true);
-            grandparent.setBlack(false);
-        }
-
-        // Parent is right child of grandparent
+        // Родитель - левый потомок grandparent
         else {
-            // Case 4b: Uncle is black and node is right->left "inner child" of its grandparent
-            if (item == parent.getLeft()) {
-                this.rotateRight(parent);
+            if (parent == grandparent.getLeft()) {
+                // Uncle - черный и элемент "внутренний внук"
+                if (item == parent.getRight()) {
+                    this.rotateLeft(parent);  // вращаем влево
+                    parent = item;
+                }
 
-                // Let "parent" point to the new root node of the rotated subtree.
-                // It will be recolored in the next step, which we're going to fall-through to.
-                parent = item;
+                // Uncle - черный и элемент "внешний внук"
+                this.rotateRight(grandparent);
             }
 
-            // Case 5b: Uncle is black and node is right->right "outer child" of its grandparent
-            this.rotateLeft(grandparent);
+            // Родитель - правый потомок grandparent
+            else {
+                // Uncle - черный и элемент "внутренний внук"
+                if (item == parent.getLeft()) {
+                    this.rotateRight(parent);
+                    parent = item;
+                }
 
-            // Recolor original parent and grandparent
+                // Uncle - черный и элемент "внешний внук"
+                this.rotateLeft(grandparent);
+            }
+            // Перекрашиваем родителя и grandparent
             parent.setBlack(true);
             grandparent.setBlack(false);
         }
     }
 
+    // Возвращаем соседний узел, рядом с родительским
     private Item getUncle(Item parent) {
-        Item grandparent = parent.getParent();
-        if (grandparent.getLeft() == parent) {
+        Item grandparent = parent.getParent();  // На 2 уровня вверх
+        if (grandparent.getLeft() == parent) {  // Выбираем нужный узл (левый или правый)
             return grandparent.getRight();
         } else if (grandparent.getRight() == parent) {
             return grandparent.getLeft();
-        } else {
+        } else {  // Что-то пошло не так
             throw new IllegalStateException("Parent is not a child of its grandparent");
         }
     }
 
-
+    // Удаление элемента
     public void deleteItem(int key) {
         Item item = this.root;
 
-        // Find the node to be deleted
+        // Ищем элемент для удаления
         while (item != null && item.getData() != key) {
-            // Traverse the tree to the left or right depending on the key
+            // Опускаемся вниз по дереву
             if (key < item.getData()) {
                 item = item.getLeft();
             } else {
@@ -206,41 +190,40 @@ public class RBTree {
             }
         }
 
-        // Node not found?
+        // Узел не найден!
         if (item == null) {
             return;
         }
 
-        // At this point, "node" is the node to be deleted
+        // item - это то, что надо удалить
 
-        // In this variable, we'll store the node at which we're going to start to fix the R-B
-        // properties after deleting a node.
+        // Тут храним элемент, от которого будем "чинить" дерево после удаления
         Item movedUpItem;
         boolean deletedItemColor;
 
-        // Node has zero or one child
+        // У элемента один, или ни одного потомка
         if (item.getLeft() == null || item.getRight() == null) {
             movedUpItem = this.deleteItemWithZeroOrOneChild(item);
             deletedItemColor = item.is_black();
         }
 
-        // Node has two children
+        // У элемента 2 потомка
         else {
-            // Find minimum node of right subtree ("inorder successor" of current node)
+            // Ищем минимальный элемент поддерева справа ("правопереемник" текущего элемента)
             Item inOrderSuccessor = this.findMinimum(item.getRight());
 
-            // Copy inorder successor's data to current node (keep its color!)
+            // Копируем данные переемника в текущий элемент
             item.setData(inOrderSuccessor.getData());
 
-            // Delete inorder successor just as we would delete a node with 0 or 1 child
+            // Удаляем элемент
             movedUpItem = deleteItemWithZeroOrOneChild(inOrderSuccessor);
             deletedItemColor = inOrderSuccessor.is_black();
         }
 
-        if (deletedItemColor) {
+        if (deletedItemColor) {  // "Чиним" дерево
             this.fixRedBlackPropertiesAfterDelete(movedUpItem);
 
-            // Remove the temporary NIL node
+            // Удаляем пустой элемент
             if (movedUpItem.getClass() == NilItem.class) {
                 this.replaceParentsChild(movedUpItem.getParent(), movedUpItem, null);
             }
@@ -248,21 +231,21 @@ public class RBTree {
     }
 
     private Item deleteItemWithZeroOrOneChild(Item item) {
-        // Node has ONLY a left child --> replace by its left child
+        // Элемент имеет только левого потомка --> заменяем его левым потомком
         if (item.getLeft() != null) {
             this.replaceParentsChild(item.getParent(), item, item.getLeft());
-            return item.getLeft(); // moved-up node
+            return item.getLeft(); // удаляемый элемент
         }
 
-        // Node has ONLY a right child --> replace by its right child
+        // Элемент имеет только правого потомка --> заменяем его правым потомком
         else if (item.getRight() != null) {
             replaceParentsChild(item.getParent(), item, item.getRight());
-            return item.getRight(); // moved-up node
+            return item.getRight(); // удаляемый элемент
         }
 
-        // Node has no children -->
-        // * node is red --> just remove it
-        // * node is black --> replace it by a temporary NIL node (needed to fix the R-B rules)
+        // У элемента нет потомков
+        // * Элемент красный --> просто удаляем его
+        // * Элемент черный --> временно заменяем его нулевым элементом (для восстановления правил)
         else {
             Item newChild = item.is_black() ? new NilItem() : null;
             this.replaceParentsChild(item.getParent(), item, newChild);
@@ -270,6 +253,7 @@ public class RBTree {
         }
     }
 
+    // Ищем последовательного преемника поддерева
     private Item findMinimum(Item item) {
         while (item.getLeft() != null) {
             item = item.getLeft();
@@ -277,53 +261,50 @@ public class RBTree {
         return item;
     }
 
-
-
-
+    // Восстанавливаем дерево (правила) после удаления элемента
     private void fixRedBlackPropertiesAfterDelete(Item item) {
-        // Case 1: Examined node is root, end of recursion
+        // Если элемент - корень, то заканчиваем обработку
         if (item == this.root) {
-            // Uncomment the following line if you want to enforce black roots (rule 2):
-            // node.color = BLACK;
             return;
         }
 
-        Item sibling = getSibling(item);
+        Item sibling = getSibling(item);  // "Братский" элемент (когда родитель один и тот же)
 
-        // Case 2: Red sibling
+        // Брат - красный
         if (!sibling.is_black()) {
             handleRedSibling(item, sibling);
-            sibling = getSibling(item); // Get new sibling for fall-through to cases 3-6
+            sibling = getSibling(item);
         }
 
-        // Cases 3+4: Black sibling with two black children
+        // Черный брат и два его черных потомка
         if (isBlack(sibling.getLeft()) && isBlack(sibling.getRight())) {
             sibling.setBlack(false);
 
-            // Case 3: Black sibling with two black children + red parent
+            // Черный брат и два его черных потомка и красный родитель
             if (!item.getParent().is_black()) {
                 item.getParent().setBlack(true);
             }
 
-            // Case 4: Black sibling with two black children + black parent
+            // Черный брат и два его черных потомка и черный родитель
             else {
                 fixRedBlackPropertiesAfterDelete(item.getParent());
             }
         }
 
-        // Case 5+6: Black sibling with at least one red child
+        // Черный брат с хотя бы одним красным потомком
         else {
             this.handleBlackSiblingWithAtLeastOneRedChild(item, sibling);
         }
     }
 
+    // Возвращение "братского" элемента (когда один и тот же родитель
     private Item getSibling(Item item) {
         Item parent = item.getParent();
         if (item == parent.getLeft()) {
             return parent.getRight();
         } else if (item == parent.getRight()) {
             return parent.getLeft();
-        } else {
+        } else {  // Что-то пошло не так
             throw new IllegalStateException("Parent is not a child of its grandparent");
         }
     }
@@ -332,12 +313,13 @@ public class RBTree {
         return item == null || item.is_black();
     }
 
+    // Обработка красного брата-соседа
     private void handleRedSibling(Item item, Item sibling) {
-        // Recolor...
+        // Перекраска
         sibling.setBlack(true);
         item.getParent().setBlack(false);
 
-        // ... and rotate
+        // вращение
         if (item == item.getParent().getLeft()) {
             this.rotateLeft(item.getParent());
         } else {
@@ -345,11 +327,13 @@ public class RBTree {
         }
     }
 
+    // Обработка черного "соседа" с хотя бы одним красным потомком
     private void handleBlackSiblingWithAtLeastOneRedChild(Item item, Item sibling) {
         boolean nodeIsLeftChild = item == item.getParent().getLeft();
 
-        // Case 5: Black sibling with at least one red child + "outer nephew" is black
-        // --> Recolor sibling and its child, and rotate around sibling
+        // Черный брат с хотя бы одним красным ребенком + "внешний племянник" черный
+        // Нужно перекрасить одноуровневый и его дочерний элементы и повернуть
+        // вокруг соседнего элемента на уровне
         if (nodeIsLeftChild && isBlack(sibling.getRight())) {
             sibling.getLeft().setBlack(true);
             sibling.setBlack(false);
@@ -362,10 +346,9 @@ public class RBTree {
             sibling = item.getParent().getLeft();
         }
 
-        // Fall-through to case 6...
-
-        // Case 6: Black sibling with at least one red child + "outer nephew" is red
-        // --> Recolor sibling + parent + sibling's child, and rotate around parent
+        // Черный брат с хотя бы одним красным ребенком + "внешний племянник" красный
+        // Нужно Перекрасить одноуровневый элемент + родительский элемент + дочерний элемент
+        // одноуровневого элемента и повернуть вокруг родителя
         sibling.setBlack(item.getParent().is_black());
         item.getParent().setBlack(true);
         if (nodeIsLeftChild) {

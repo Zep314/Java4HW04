@@ -1,11 +1,12 @@
 package model;
 
+// Класс, описывает один элемент красно-черного дерева
 public class Item {
-    private int data;
-    private boolean is_black;
-    private Item left;
-    private Item right;
-    private Item parent;
+    private int data;  // Данные (они же и ключ)
+    private boolean is_black;  // Цвет - черный/не черный
+    private Item left;  // Ссылка на левый элемент - потомок
+    private Item right;  // Ссылка на правый элемент - потомок
+    private Item parent;  // Ссылка на предыдущий (родительский) элемент
 
     @SuppressWarnings("unused")
     public Item() {
@@ -19,8 +20,12 @@ public class Item {
     public Item(int number) {
         this.data = number;
         this.is_black = true;
+        this.left = null;
+        this.right = null;
+        this.parent = null;
     }
 
+    // геттеры - сеттеры
     public int getData() {
         return this.data;
     }
@@ -57,7 +62,7 @@ public class Item {
     }
 
     @Override
-    public String toString() {
+    public String toString() {  // Красиво компонуем строку с данными элемента
         return String.format("Item: %d, Color: %s, Parent: %s, Left: %s, Right: %s"
                 , this.getData()
                 , (this.is_black()) ? "Black" : "Red"
