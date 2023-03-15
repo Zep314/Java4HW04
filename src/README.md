@@ -16,14 +16,46 @@
 
 ***
 ## Решение:
-Разработан класс для работы с деревом
+Разработан класс для работы с красно-черным левосторонним деревом. 
+
+Реализованы следующие методы:
+* Добавление элемента
+* Поиск элемента
+* Удаление элемента
+
+Для балансировки дерева реализованы служебные методы:
+* Левый поворот поддерева
+* Правый поворот поддерева
+* Непосредственно - сама балансировка (правильное выстраивание цветов узлов)
 
 Текст программы представлен в этом репозитарии.
 
 ***
 ### Результат работы программы:
-
-    123
+    ============= Начало работы =============
+    Level: 0, Item: 40, Color: Black, Parent: null, Left: 14, Right: 83
+    Level: 1, Item: 14, Color: Black, Parent: 40, Left: null, Right: 15
+    Level: 2, Item: 15, Color: Red, Parent: 14, Left: null, Right: null
+    Level: 1, Item: 83, Color: Red, Parent: 40, Left: 68, Right: 86
+    Level: 2, Item: 68, Color: Black, Parent: 83, Left: 47, Right: 70
+    Level: 3, Item: 47, Color: Red, Parent: 68, Left: null, Right: null
+    Level: 3, Item: 70, Color: Red, Parent: 68, Left: null, Right: null
+    Level: 2, Item: 86, Color: Black, Parent: 83, Left: 84, Right: null
+    Level: 3, Item: 84, Color: Red, Parent: 86, Left: null, Right: null
+    ============= Удаление корня ============
+    Level: 0, Item: 47, Color: Black, Parent: null, Left: 14, Right: 83
+    Level: 1, Item: 14, Color: Black, Parent: 47, Left: null, Right: 15
+    Level: 2, Item: 15, Color: Red, Parent: 14, Left: null, Right: null
+    Level: 1, Item: 83, Color: Red, Parent: 47, Left: 68, Right: 86
+    Level: 2, Item: 68, Color: Black, Parent: 83, Left: null, Right: 70
+    Level: 3, Item: 70, Color: Red, Parent: 68, Left: null, Right: null
+    Level: 2, Item: 86, Color: Black, Parent: 83, Left: 84, Right: null
+    Level: 3, Item: 84, Color: Red, Parent: 86, Left: null, Right: null
+    ============= Конец работы ==============
     
     Process finished with exit code 0
-   
+***
+#### Наглядное представление изначального дерева
+![Изначальное дерево](screen1.png)
+#### Наглядное представление изначального дерева после удаления корня
+![Дерево после удаления элемента](screen2.png)

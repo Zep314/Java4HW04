@@ -63,7 +63,7 @@ public class Item {
 
     @Override
     public String toString() {  // Красиво компонуем строку с данными элемента
-        return String.format("Item: %d, Color: %s, Parent: %s, Left: %s, Right: %s"
+        return String.format("Item: %2d, Color: %s, Parent: %s, Left: %s, Right: %s"
                 , this.getData()
                 , (this.is_black()) ? "Black" : "Red"
                 , (this.getParent() != null) ? this.getParent().getData() : "null"
